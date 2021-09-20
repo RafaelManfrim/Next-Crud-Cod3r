@@ -1,3 +1,3 @@
-### Next Crud Project
+# Next Crud Project
 
-# Firebase and TailwindCSS
+### Firebase and TailwindCSS aplication
