@@ -4,29 +4,39 @@ import Table from '../components/Table'
 import Form from '../components/Form'
 import Button from '../components/Button'
 import Client from '../model/Client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import ClientRepository from '../core/ClientRepository'
+import ClientCollection from '../db/ClientCollection'
 
 const Home: NextPage = () => {
 
+	const repo: ClientRepository = new ClientCollection()
+
 	const [client, setClient] = useState<Client>(Client.void())
+	const [clients, setClients] = useState<Client[]>([])
 	const [mode, setMode] = useState<'table' | 'form'>('table')
 
-	const clients = [
-		new Client('Ana Rita', 17, '1'),
-		new Client('Rafael', 17, '2')
-	]
+	useEffect(getAll, [])
+
+	function getAll(){
+		repo.getAllClients().then(clients => {
+			setClients(clients)
+			setMode('table')
+		})
+	}
 
 	function onClientEdit(client: Client){
 		setClient(client)
 		setMode('form')
 	}
 
-	function onClientDelete(client: Client){
-		setClient(client)
+	async function onClientDelete(client: Client){
+		await repo.deleteClient(client)
+		getAll()
 	}
 
 	function switchToTable(){
-		setMode('table')
+		getAll()
 	}
 
 	function newClient(){
@@ -34,9 +44,9 @@ const Home: NextPage = () => {
 		setMode('form')
 	}
 
-	function saveClient(client: Client){
-		console.log(client)
-		setMode('table')
+	async function saveClient(client: Client){
+		await repo.saveClient(client)
+		getAll()
 	}
 
 	return (

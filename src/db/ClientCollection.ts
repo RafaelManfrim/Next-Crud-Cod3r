@@ -11,7 +11,7 @@ export default class ClientCollection implements ClientRepository {
                 age: client.age,
             }
         },
-        fromFirestore(snapshot: firebase.firestore.DocumentQuerySnapshot, options: firebase.firestore.SnapshotOptions): Client {
+        fromFirestore(snapshot: firebase.firestore.DocumentData , options: firebase.firestore.SnapshotOptions): Client {
             const data = snapshot.data(options)
             return new Client(data.name, data.age, snapshot.id)
         }
@@ -25,12 +25,12 @@ export default class ClientCollection implements ClientRepository {
         } else {
             const docRef = await this.coletion().add(client)
             const doc = await docRef.get()
-            return doc.data()
+            return doc.data() ?? Client.void()
         }
     }
 
     async deleteClient(client: Client): Promise<void> {
-        return this.coletion().doc(client.id).delete()
+        return this.coletion().doc(client.id ?? '').delete()
     }
 
     async getAllClients(): Promise<Client[]> {
@@ -39,6 +39,6 @@ export default class ClientCollection implements ClientRepository {
     }
 
     private coletion(){
-        return firebase.firestore().coletion('clients').withConverter(this.converter)
+        return firebase.firestore().collection('clients').withConverter(this.converter)
     }
 }
