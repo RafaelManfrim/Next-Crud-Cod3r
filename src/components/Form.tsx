@@ -6,7 +6,7 @@ import Button from './Button'
 type FormProps = {
     client?: Client
     onClientChanged?: (client: Client) => void
-    switchToTable: () => void
+    displayTable: () => void
 }
 
 export default function Form(props: FormProps){
@@ -23,7 +23,7 @@ export default function Form(props: FormProps){
             <Input name='Age' type='number' value={age} onChange={e => setAge(e.target.value)}/>
             <div className='flex justify-end mt-4'>
                 <Button color='green' cls='mr-2' onClick={() => props.onClientChanged?.(new Client(name, +age, props.client?.id))}>{props.client?.id ? 'Change' : 'Save'}</Button>
-                <Button color='gray' onClick={props.switchToTable}>Cancel</Button>
+                <Button color='gray' onClick={props.displayTable}>Cancel</Button>
             </div>
         </div>
     )
